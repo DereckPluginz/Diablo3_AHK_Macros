@@ -1,35 +1,38 @@
-#SingleInstance, Force
+#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-settitlematchmode,3 ;this affects IfWinNotActive, 2= partial window match, 3=title must match exactly
-keyList := []
-keyList.insert(["3",500,0])  ;object = key,interval,nextInterval=0
-keyList.insert(["Q",100,0])
-toggle := false
+; ----------------------------------------
+; ----------------------------------------
+
+; ----- my edit, script, begins below
+
+; total is three labels and one hotkey F1
+
+warCry_b1:
+Send, {q}
 return
 
-~T::
-	toggle := false
-	settimer,auto,off
+TShout_b3:
+Send, {3}
 return
 
-F6::
-	toggle := true
-	;loop % keyList.MaxIndex()
-	;	keyList[a_index][3] := a_tickcount + keyList[a_index][2] ;reset nextinterval to default interval
-	settimer,auto,10
+
+
+~LAlt Up:: return
+
+#MaxThreadsPerHotkey 2
+F1::
+toggle := !toggle 
+GoSub, warCry_b1
+GoSub, TShout_b3
+SetTimer, warCry_b1, 1
+SetTimer, TShout_b3, 1000
+if !(toggle) {
+SetTimer, warCry_b1, Off
+SetTimer, TShout_b3, Off
+}
 return
 
-auto:
-	if (WinActive("Diablo III") && toggle) {
-		loop % keyList.MaxIndex() { ;loop through our array of keys
-			if (a_tickcount > keyList[a_index][3]) { ;if enough time has passed since last press do something
-				keyList[a_index][3] := a_tickcount + keyList[a_index][2] ;set next interval
-				key := keyList[a_index][1]
-				send {%key% down}
-				sleep 50
-				send {%key% up}
-      
-			}
-		}
-	}
-return
+; my edit, script, ends above -----
